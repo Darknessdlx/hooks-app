@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import {useEffect, useReducer, useState} from 'react';
 
 import { Plus, Trash2, Check } from 'lucide-react';
 
@@ -6,48 +6,46 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {getTaskInicialState, taskReducer} from "@/05-useReducer/reducer/taskReducer.ts";
 
-interface Todo {
-    id: number;
-    text: string;
-    completed: boolean;
-}
 
 export const TasksApp = () => {
-    const [todos, setTodos] = useState<Todo[]>([]);
     const [inputValue, setInputValue] = useState('');
+
+    const [state, dispatch] = useReducer(taskReducer, getTaskInicialState())
+
+    useEffect(() => {
+        localStorage.setItem('task-state', JSON.stringify(state));
+    }, [state]);
 
     const addTodo = () => {
         if (inputValue.length === 0) return;
-
-        const newTodo: Todo = {
-            id: Date.now(),
-            text: inputValue.trim(),
-            completed: false,
-        }
-
-        setTodos([...todos, newTodo]);
+        dispatch({type: 'ADD_TODO', payload: inputValue});
         setInputValue('')
 
     };
 
     const toggleTodo = (id: number) => {
-        console.log('Cambiar de true a false', id);
+
+        dispatch({type: 'TOGGLE_TODO', payload: id});
 
     };
 
     const deleteTodo = (id: number) => {
-        console.log('Eliminar tarea', id);
+
+        dispatch({type: 'DELETE_TODO', payload: id});
 
     };
 
     const handleKeyPress = (e: React.KeyboardEvent) => {
-        console.log({ key: e.key });
+        // console.log({ key: e.key });
         if (e.key === 'Enter') {
             addTodo();
         }
 
     };
+
+    const todos = state.todos;
 
     const completedCount = todos.filter((todo) => todo.completed).length;
     const totalCount = todos.length;
