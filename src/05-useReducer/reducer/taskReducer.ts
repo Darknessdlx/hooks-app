@@ -8,15 +8,15 @@ interface Todo {
 
 interface TaskState {
     todos: Todo[];
-    lenght: number;
+    length: number;
     completed: number;
     pending: number;
 }
 
 export type TaskAction =
-    { type: 'ADD_TODO', payload: string } |
-    { type: 'DELETE_TODO', payload: number } |
-    { type: 'TOGGLE_TODO', payload: number }
+    | { type: 'ADD_TODO', payload: string }
+    | { type: 'DELETE_TODO', payload: number }
+    | { type: 'TOGGLE_TODO', payload: number }
 
 const TodoSchema = z.object({
     id: z.number(),
@@ -26,20 +26,20 @@ const TodoSchema = z.object({
 
 const TaskStateSchema = z.object({
     todos: z.array(TodoSchema),
-    lenght: z.number(),
+    length: z.number(),
     completed: z.number(),
     pending: z.number(),
 })
 
 export const getTaskInicialState = (): TaskState => {
-    const localStorageState = localStorage.getItem('task-state');
+    const localStorageState = localStorage.getItem('tasks-state');
 
     if (!localStorageState) {
         return {
             todos: [],
             completed: 0,
             pending: 0,
-            lenght: 0,
+            length: 0,
         }
     }
 
@@ -52,7 +52,7 @@ export const getTaskInicialState = (): TaskState => {
             todos: [],
             completed: 0,
             pending: 0,
-            lenght: 0,
+            length: 0,
         }
     }
 
@@ -76,7 +76,7 @@ export const taskReducer = (
             return {
                 ...state,
                 todos: [...state.todos, newTodo],
-                lenght: state.lenght + 1,
+                length: state.length + 1,
                 pending: state.pending + 1,
             }
         }
@@ -87,7 +87,7 @@ export const taskReducer = (
             return {
                 ...state,
                 todos: currentTodos,
-                lenght: currentTodos.length,
+                length: currentTodos.length,
                 completed: currentTodos.filter((todo) => todo.completed).length,
                 pending: currentTodos.filter((todo) => !todo.completed).length,
 

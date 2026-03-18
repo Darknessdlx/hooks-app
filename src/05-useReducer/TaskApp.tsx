@@ -1,54 +1,50 @@
 import {useEffect, useReducer, useState} from 'react';
 
-import { Plus, Trash2, Check } from 'lucide-react';
+import {Plus, Trash2, Check} from 'lucide-react';
 
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {Button} from '@/components/ui/button';
+import {Input} from '@/components/ui/input';
+import {Checkbox} from '@/components/ui/checkbox';
+import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/card';
 import {getTaskInicialState, taskReducer} from "@/05-useReducer/reducer/taskReducer.ts";
 
 
 export const TasksApp = () => {
     const [inputValue, setInputValue] = useState('');
+    // const [todos, setTodos] = useState<Todo[]>([]);
 
-    const [state, dispatch] = useReducer(taskReducer, getTaskInicialState())
+    const [state, dispatch] = useReducer(taskReducer, getTaskInicialState());
 
     useEffect(() => {
-        localStorage.setItem('task-state', JSON.stringify(state));
+        localStorage.setItem('tasks-state', JSON.stringify(state));
     }, [state]);
 
     const addTodo = () => {
         if (inputValue.length === 0) return;
-        dispatch({type: 'ADD_TODO', payload: inputValue});
-        setInputValue('')
+        dispatch({type: 'ADD_TODO', payload: inputValue})
+        setInputValue('');
 
     };
 
     const toggleTodo = (id: number) => {
-
-        dispatch({type: 'TOGGLE_TODO', payload: id});
-
+        dispatch({type: 'TOGGLE_TODO', payload: id})
     };
 
     const deleteTodo = (id: number) => {
-
-        dispatch({type: 'DELETE_TODO', payload: id});
-
+        dispatch({type: 'DELETE_TODO', payload: id})
     };
 
     const handleKeyPress = (e: React.KeyboardEvent) => {
-        // console.log({ key: e.key });
+        // console.log({key: e.key})
         if (e.key === 'Enter') {
             addTodo();
         }
-
     };
 
-    const todos = state.todos;
+    const {todos, completed: completedCount, length: totalCount} = state;
 
-    const completedCount = todos.filter((todo) => todo.completed).length;
-    const totalCount = todos.length;
+    // const completedCount = todos.filter((todo) => todo.completed).length;
+    // const totalCount = todos.length;
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-4">
@@ -76,7 +72,7 @@ export const TasksApp = () => {
                                 onClick={addTodo}
                                 className="bg-slate-800 hover:bg-slate-700 text-white px-4"
                             >
-                                <Plus className="w-4 h-4" />
+                                <Plus className="w-4 h-4"/>
                             </Button>
                         </div>
                     </CardContent>
@@ -99,7 +95,7 @@ export const TasksApp = () => {
                             <div className="w-full bg-slate-200 rounded-full h-2">
                                 <div
                                     className="bg-gradient-to-r from-green-400 to-green-500 h-2 rounded-full transition-all duration-300 ease-out"
-                                    style={{ width: `${(completedCount / totalCount) * 100}%` }}
+                                    style={{width: `${(completedCount / totalCount) * 100}%`}}
                                 />
                             </div>
                         </CardContent>
@@ -115,8 +111,9 @@ export const TasksApp = () => {
                     <CardContent>
                         {todos.length === 0 ? (
                             <div className="text-center py-12">
-                                <div className="w-16 h-16 mx-auto mb-4 bg-slate-100 rounded-full flex items-center justify-center">
-                                    <Check className="w-8 h-8 text-slate-400" />
+                                <div
+                                    className="w-16 h-16 mx-auto mb-4 bg-slate-100 rounded-full flex items-center justify-center">
+                                    <Check className="w-8 h-8 text-slate-400"/>
                                 </div>
                                 <p className="text-slate-500 text-lg mb-2">No hay tareas</p>
                                 <p className="text-slate-400 text-sm">
@@ -154,7 +151,7 @@ export const TasksApp = () => {
                                             onClick={() => deleteTodo(todo.id)}
                                             className="text-slate-400 hover:text-red-500 hover:bg-red-50 h-8 w-8 p-0"
                                         >
-                                            <Trash2 className="w-4 h-4" />
+                                            <Trash2 className="w-4 h-4"/>
                                         </Button>
                                     </div>
                                 ))}
