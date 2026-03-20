@@ -2,14 +2,13 @@
 // Es necesario componentes de Shadcn/ui
 // https://ui.shadcn.com/docs/installation/vite
 
-import React, {useReducer, useState} from 'react';
+import React, {useEffect, useReducer } from 'react';
 import {Button} from '@/components/ui/button';
 import {Input} from '@/components/ui/input';
 import {Card, CardContent} from '@/components/ui/card';
 import {SkipForward, Play} from 'lucide-react';
-import conffeti from 'canvas-confetti'
+import confetti from 'canvas-confetti';
 import {getInitialState, scrambleWordsReducer} from "@/05-useReducer/reducer/scrambleWordReducer.ts";
-// import { set } from 'zod';
 
 export const ScrambleWords = () => {
 
@@ -29,80 +28,38 @@ export const ScrambleWords = () => {
         totalWords,
     } = state
 
-    // const [words, setWords] = useState(shuffleArray(GAME_WORDS));
-    //
-    // const [currentWord, setCurrentWord] = useState(words[0]);
-    // const [scrambledWord, setScrambledWord] = useState(scrambleWord(currentWord));
-    // const [guess, setGuess] = useState('');
-    // const [points, setPoints] = useState(0);
-    // const [errorCounter, setErrorCounter] = useState(0);
-    // const [maxAllowErrors, setMaxAllowErrors] = useState(3);
-    //
-    // const [skipCounter, setSkipCounter] = useState(0);
-    // const [maxSkips, setMaxSkips] = useState(3);
-    //
-    // const [isGameOver, setIsGameOver] = useState(false);
+    useEffect(() => {
+        if ( points === 0 ) return;
+
+        confetti ({
+            particleCount: 100,
+            spread: 120,
+            origin: { y: 0.6 }
+        })
+    }, [points]);
 
     const handleGuessSubmit = (e: React.FormEvent) => {
-        // Previene el refresh de la página
-        // e.preventDefault();
-        // // Implementar lógica de juego
-        // // console.log('Intento de adivinanza:', guess, currentWord);
-        //
-        // if (guess === currentWord) {
-        //     const newWords = words.slice(1);
-        //
-        //     conffeti({
-        //         particleCount: 100,
-        //         spread: 120,
-        //         origin: {y: 0.6},
-        //     })
-        //
-        //     setPoints(points + 1);
-        //     setGuess('');
-        //     setWords(newWords);
-        //     setCurrentWord(newWords[0]);
-        //     setScrambledWord(scrambleWord(newWords[0]));
-        //     return;
-        // }
-        //
-        // setErrorCounter(errorCounter + 1);
-        // setGuess('');
-        //
-        // if (errorCounter + 1 >= maxAllowErrors) {
-        //     setIsGameOver(true);
-        // }
+        e.preventDefault();
+        dispatch({
+            type: 'CHECK_ANSWER',
+        })
     };
 
     const handleSkip = () => {
-        // if (skipCounter >= maxSkips) {
-        //     return
-        // }
-        //
-        // const updatedWords = words.slice(1);
-        // setWords(updatedWords);
-        // setCurrentWord(updatedWords[0]);
-        // setScrambledWord(scrambleWord(updatedWords[0]));
-        // setSkipCounter(skipCounter + 1);
-        // setGuess('')
-
+        dispatch({ type: 'SKIP_WORD' });
     };
 
     const handlePlayAgain = () => {
-        // const newArray = shuffleArray(GAME_WORDS);
-        //
-        // setPoints(0)
-        // setErrorCounter(0)
-        // setGuess('')
-        // setSkipCounter(0)
-        // setIsGameOver(false)
-        // setWords(newArray);
-        // setCurrentWord(newArray[0]);
-        // setScrambledWord(scrambleWord(newArray[0]));
+        dispatch({ type: "START_NEW_GAME", payload: getInitialState()})
     };
 
     //! Si ya no hay palabras para jugar, se muestra el mensaje de fin de juego
     if (words.length === 0) {
+        confetti ({
+            particleCount: 100,
+            spread: 120,
+            origin: { y: 0.6 }
+        })
 
         return (
             <div
@@ -182,8 +139,9 @@ export const ScrambleWords = () => {
                                         type="text"
                                         value={guess}
                                         onChange={(e) => {
-                                            // setGuess(e.target.value.toUpperCase().trim())
-                                            console.log(e.target.value)
+                                            dispatch({
+                                                type: 'SET_GUESS', payload: e.target.value
+                                            })
                                         }}
                                         placeholder="Ingresa tu palabra..."
                                         className="text-center text-lg font-semibold h-12 border-2 border-indigo-200 focus:border-indigo-500 transition-colors"
