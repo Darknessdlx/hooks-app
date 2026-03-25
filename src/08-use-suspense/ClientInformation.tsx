@@ -1,13 +1,29 @@
-export const ClientInformation = () => {
+import {type Usable, use} from "react";
+import {type User} from "@/08-use-suspense/api/get-user.action.ts";
+
+interface Props {
+    getUser: Usable<User>
+}
+
+export const ClientInformation = ({getUser}: Props) => {
+
+    const user = use(getUser);
+
+    // const user = await getUserAction(id);
+
+    // useEffect(() => {
+    //     getUserAction(id).then(console.log);
+    // }, [id]);
+
     return (
         <div className={'bg-gradient flex flex-col gap-4'}>
-            <h2 className={'text-4xl font font-thin text-white'}>Fernando Herrera</h2>
+            <h2 className={'text-4xl font font-thin text-white'}>{user.name} - #{user.id}</h2>
 
             <p className={'text-white text-2xl'}>
-                Otawa, Canada
+                {user.location}
             </p>
             <p className={'text-white text-2xl'}>
-                Rol de usuario
+                {user.role}
             </p>
 
         </div>
