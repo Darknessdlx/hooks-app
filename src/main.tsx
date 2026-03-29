@@ -1,4 +1,4 @@
-import {StrictMode, Suspense} from 'react'
+import {StrictMode} from 'react'
 import {createRoot} from 'react-dom/client'
 import {Toaster} from "sonner";
 
@@ -13,16 +13,17 @@ import {Toaster} from "sonner";
 // import {MemoHook} from "@/06-memos/MemoHook.tsx";
 // import {MemoCounter} from "@/06-memos/MemoCounter.tsx";
 // import {InstagromApp} from "@/07-useOptimistic/InstagromApp.tsx";
-import {ClientInformation} from "@/08-use-suspense/ClientInformation.tsx";
+// import {ClientInformation} from "@/08-use-suspense/ClientInformation.tsx";
+// import {getUserAction} from "@/08-use-suspense/api/get-user.action.ts";
+import {ProfessionalApp} from "@/09-useContext/ProfessionalApp.tsx";
 
 
 import './index.css'
-import {getUserAction} from "@/08-use-suspense/api/get-user.action.ts";
 
 
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
-        <Toaster/>
+        <Toaster richColors={true } position={'top-right'}/>
         {/*<HooksApp/>*/}
         {/*<TrafficLight/>*/}
         {/*<TrafficLightWithEffect/>*/}
@@ -34,14 +35,16 @@ createRoot(document.getElementById('root')!).render(
         {/*<MemoHook/>*/}
         {/*<MemoCounter/>*/}
         {/*<InstagromApp/>*/}
-        <Suspense
-        fallback={
-            <div className={'bg-gradient flex flex-col'}>
-                <h1 className={'text-2xl'}>Cargando...</h1>
-            </div>
-        }
-        >
-            <ClientInformation getUser={ getUserAction(1000)}/>
-        </Suspense>
+        {/*<Suspense*/}
+        {/*    fallback={*/}
+        {/*        <div className={'bg-gradient flex flex-col'}>*/}
+        {/*            <h1 className={'text-2xl'}>Cargando...</h1>*/}
+        {/*        </div>*/}
+        {/*    }*/}
+        {/*>*/}
+        {/*    <ClientInformation getUser={getUserAction(1000)}/>*/}
+        {/*</Suspense>*/}
+
+        <ProfessionalApp/>
     </StrictMode>,
 )
